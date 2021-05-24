@@ -1,50 +1,94 @@
 <?xml version="1.0"?>
-<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN"
+        "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
 
-<service-builder dependency-injector="ds" package-path="com.liferay.docs.guestbook">
-	<namespace>FOO</namespace>
-	<!--<entity data-source="sampleDataSource" local-service="true" name="Foo" remote-service="false" session-factory="sampleSessionFactory" table="foo" tx-manager="sampleTransactionManager uuid="true"">-->
-	<entity local-service="true" name="Foo" remote-service="true" uuid="true">
+<service-builder dependency-injector="ds" package-path="com.liferay.docs.guestbook" mvcc-enabled="true">
+    <!--	This defines the author, namespace, and the entity name -->
+    <author>liferay</author>
+    <namespace>GB</namespace>
+    <entity name="Guestbook" local-service="true" uuid="true" remote-service="true">
 
-		<!-- PK fields -->
 
-		<column name="fooId" primary="true" type="long" />
+        <!-- Guestbook fields -->
+        <!-- PK fields -->
+        <column name="guestbookId" primary="true" type="long"/>
+        <column name="name" type="String"/>
 
-		<!-- Group instance -->
+        <!-- Group instance -->
+        <!--        The groupId defines the ID of the Site in Liferay DXP where the entity instance exists.
+                    The companyId is the primary key of a portal instance.-->
+        <column name="groupId" type="long"/>
+        <column name="companyId" type="long"/>
 
-		<column name="groupId" type="long" />
+        <!-- Audit fields -->
+        <!--        These fields help you track owners of entity instances,
+                    along with those instances’ create and modify dates-->
+        <column name="userId" type="long"/>
+        <column name="userName" type="String"/>
+        <column name="createDate" type="Date"/>
+        <column name="modifiedDate" type="Date"/>
 
-		<!-- Audit fields -->
+        <!-- Status fields -->
 
-		<column name="companyId" type="long" />
-		<column name="userId" type="long" />
-		<column name="userName" type="String" />
-		<column name="createDate" type="Date" />
-		<column name="modifiedDate" type="Date" />
+        <column name="status" type="int"/>
+        <column name="statusByUserId" type="long"/>
+        <column name="statusByUserName" type="String"/>
+        <column name="statusDate" type="Date"/>
 
-		<!-- Other fields -->
 
-		<column name="field1" type="String" />
-		<column name="field2" type="boolean" />
-		<column name="field3" type="int" />
-		<column name="field4" type="Date" />
-		<column name="field5" type="String" />
+        <!-- Finder methods -->
+        <!--        A finder generates a get method for retrieving Guestbook entities.
+                    The fields used by the finder define the scope of the data retrieved. -->
+        <finder name="GroupId" return-type="Collection">
+            <finder-column name="groupId"/>
+        </finder>
+    </entity>
 
-		<!-- Order -->
+    <entity name="GuestbookEntry" local-service="true" remote-service="true" uuid="true">
+        <!-- Guestbook Entry fields -->
 
-		<order by="asc">
-			<order-column name="field1" />
-		</order>
+        <column name="entryId" primary="true" type="long"/>
+        <column name="name" type="String"/>
+        <column name="email" type="String"/>
+        <column name="message" type="String"/>
+        <column name="guestbookId" type="long"/>
 
-		<!-- Finder methods -->
+        <!-- Group instance -->
 
-		<finder name="Field2" return-type="Collection">
-			<finder-column name="field2" />
-		</finder>
+        <column name="groupId" type="long"/>
+        <column name="companyId" type="long"/>
 
-		<!-- References -->
+        <!-- Audit fields -->
 
-		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
-	</entity>
+        <column name="userId" type="long"/>
+        <column name="userName" type="String"/>
+        <column name="createDate" type="Date"/>
+        <column name="modifiedDate" type="Date"/>
+
+        <!-- Status fields -->
+        <!--        status fields to track workflow-->
+        <column name="status" type="int"/>
+        <column name="statusByUserId" type="long"/>
+        <column name="statusByUserName" type="String"/>
+        <column name="statusDate" type="Date"/>
+
+        <!-- order by -->
+        <order>
+            <order-column name="createDate" order-by="desc" />
+        </order>
+
+        <finder name="G_G" return-type="Collection">
+            <finder-column name="groupId" />
+            <finder-column name="guestbookId" />
+        </finder>
+    </entity>
+
+    <exceptions>
+        <exception>GuestbookEntryEmail</exception>
+        <exception>GuestbookEntryMessage</exception>
+        <exception>GuestbookEntryName</exception>
+        <exception>GuestbookName</exception>
+    </exceptions>
+
+
 </service-builder>
