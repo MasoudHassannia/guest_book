@@ -1,0 +1,13 @@
+dependencies {
+	//For the web module to access the generated services,
+	// you must make it aware of the API and service modules
+	compileOnly project(":modules:guestbook:guestbook-api")
+	compileOnly project(":modules:guestbook:guestbook-service")
+
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+
+	cssBuilder group: "com.liferay", name: "com.liferay.css.builder", version: "3.0.2"
+}
+
+
