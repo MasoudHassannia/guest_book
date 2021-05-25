@@ -31,4 +31,32 @@
         <aui:button type="submit" />
         <aui:button onClick="<%= viewURL %>" type="cancel"  />
     </aui:button-row>
+
+    <liferay-asset:asset-categories-error />
+    <liferay-asset:asset-tags-error />
+
+    <c:if test="<%= guestbook != null %>">
+
+        <liferay-ui:panel defaultState="closed" extended="<%= false %>"
+                          id="guestbookCategorizationPanel" persistState="<%= true %>"
+                          title="categorization">
+
+        </liferay-ui:panel>
+
+    </c:if>
+
+    <aui:fieldset>
+        <liferay-asset:asset-categories-selector className="<%= Guestbook.class.getName() %>" classPK="<%= guestbook.getGuestbookId() %>" />
+        <liferay-asset:asset-tags-selector className="<%= Guestbook.class.getName() %>" classPK="<%= guestbook.getGuestbookId() %>" />
+    </aui:fieldset>
+
+    <liferay-ui:panel defaultState="closed" extended="<%= false %>"
+                      id="guestbookAssetLinksPanel" persistState="<%= true %>"
+                      title="related-assets">
+        <aui:fieldset>
+            <liferay-asset:input-asset-links
+                    className="<%= Guestbook.class.getName() %>"
+                    classPK="<%= guestbookId %>" />
+        </aui:fieldset>
+    </liferay-ui:panel>
 </aui:form>
