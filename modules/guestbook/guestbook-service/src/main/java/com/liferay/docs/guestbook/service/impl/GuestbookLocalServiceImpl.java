@@ -20,6 +20,7 @@ import java.util.List;
 import com.liferay.docs.guestbook.model.GuestbookEntry;
 import com.liferay.docs.guestbook.service.GuestbookEntryLocalService;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.model.ResourceConstants;
 import org.osgi.service.component.annotations.Component;
 
 import com.liferay.docs.guestbook.exception.GuestbookNameException;
@@ -81,6 +82,9 @@ public class GuestbookLocalServiceImpl extends GuestbookLocalServiceBaseImpl {
 
 		guestbookPersistence.update(guestbook);
 
+		resourceLocalService.addResources(user.getCompanyId(), groupId, userId,
+				Guestbook.class.getName(), guestbookId, false, true, true);
+
 		return guestbook;
 	}
 
@@ -134,6 +138,11 @@ public class GuestbookLocalServiceImpl extends GuestbookLocalServiceBaseImpl {
 
 		guestbookPersistence.update(guestbook);
 
+		resourceLocalService.updateResources(serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(),
+				Guestbook.class.getName(), guestbookId,
+				serviceContext.getModelPermissions());
+
 		return guestbook;
 	}
 
@@ -152,6 +161,10 @@ public class GuestbookLocalServiceImpl extends GuestbookLocalServiceBaseImpl {
 		}
 
 		guestbook = deleteGuestbook(guestbook);
+
+		resourceLocalService.deleteResource(serviceContext.getCompanyId(),
+				Guestbook.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL,
+				guestbookId);
 
 		return guestbook;
 	}

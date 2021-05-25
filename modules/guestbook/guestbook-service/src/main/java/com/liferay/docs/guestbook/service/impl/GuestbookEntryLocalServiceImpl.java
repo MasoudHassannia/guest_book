@@ -17,6 +17,7 @@ package com.liferay.docs.guestbook.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.liferay.portal.kernel.model.ResourceConstants;
 import org.osgi.service.component.annotations.Component;
 
 import com.liferay.docs.guestbook.exception.GuestbookEntryEmailException;
@@ -83,8 +84,8 @@ public class GuestbookEntryLocalServiceImpl
 
         guestbookEntryPersistence.update(entry);
 
-        // Calls to other Liferay frameworks go here
-
+        resourceLocalService.addResources(user.getCompanyId(), groupId, userId,
+                GuestbookEntry.class.getName(), entryId, false, true, true);
         return entry;
     }
 
@@ -112,6 +113,11 @@ public class GuestbookEntryLocalServiceImpl
 
         guestbookEntryPersistence.update(entry);
 
+        resourceLocalService.updateResources(
+                user.getCompanyId(), serviceContext.getScopeGroupId(),
+                GuestbookEntry.class.getName(), entryId,
+                serviceContext.getModelPermissions());
+
         // Integrate with Liferay frameworks here.
 
         return entry;
@@ -121,6 +127,10 @@ public class GuestbookEntryLocalServiceImpl
             throws PortalException {
 
         guestbookEntryPersistence.remove(entry);
+
+        resourceLocalService.deleteResource(
+                entry.getCompanyId(), GuestbookEntry.class.getName(),
+                ResourceConstants.SCOPE_INDIVIDUAL, entry.getEntryId());
 
         return entry;
     }

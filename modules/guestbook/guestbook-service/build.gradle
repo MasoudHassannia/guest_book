@@ -2,6 +2,10 @@ dependencies {
 	compile project(":modules:guestbook:guestbook-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+
+	compileOnly group: "com.liferay", name: "com.liferay.petra.function"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.model.adapter"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.reflect"
 }
 
 buildService {
