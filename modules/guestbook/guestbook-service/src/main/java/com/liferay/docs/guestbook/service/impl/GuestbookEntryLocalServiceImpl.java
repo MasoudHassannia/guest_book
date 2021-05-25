@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.liferay.portal.kernel.model.ResourceConstants;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import org.osgi.service.component.annotations.Component;
 
 import com.liferay.docs.guestbook.exception.GuestbookEntryEmailException;
@@ -53,6 +55,7 @@ import com.liferay.portal.kernel.util.Validator;
 public class GuestbookEntryLocalServiceImpl
         extends GuestbookEntryLocalServiceBaseImpl {
 
+    @Indexable(type = IndexableType.REINDEX)
     public GuestbookEntry addGuestbookEntry(long userId, long guestbookId, String name,
                                             String email, String message, ServiceContext serviceContext)
             throws PortalException {
@@ -89,6 +92,7 @@ public class GuestbookEntryLocalServiceImpl
         return entry;
     }
 
+    @Indexable(type = IndexableType.REINDEX)
     public GuestbookEntry updateGuestbookEntry(long userId, long guestbookId,
                                                long entryId, String name, String email, String message,
                                                ServiceContext serviceContext)

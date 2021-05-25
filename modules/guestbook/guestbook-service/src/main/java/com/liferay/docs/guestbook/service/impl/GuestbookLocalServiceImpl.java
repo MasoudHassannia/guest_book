@@ -21,6 +21,8 @@ import com.liferay.docs.guestbook.model.GuestbookEntry;
 import com.liferay.docs.guestbook.service.GuestbookEntryLocalService;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.ResourceConstants;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import org.osgi.service.component.annotations.Component;
 
 import com.liferay.docs.guestbook.exception.GuestbookNameException;
@@ -55,6 +57,7 @@ public class GuestbookLocalServiceImpl extends GuestbookLocalServiceBaseImpl {
 
 	//This method adds a guestbook to the database.
 	// It retrieves metadata from the environment,along with data passed from the user
+	@Indexable(type = IndexableType.REINDEX)
 	public Guestbook addGuestbook(long userId, String name,
 								  ServiceContext serviceContext) throws PortalException, PortalException {
 
@@ -118,6 +121,7 @@ public class GuestbookLocalServiceImpl extends GuestbookLocalServiceBaseImpl {
 		}
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	public Guestbook updateGuestbook(long userId, long guestbookId,
 									 String name, ServiceContext serviceContext) throws PortalException,
 			SystemException {
@@ -146,7 +150,7 @@ public class GuestbookLocalServiceImpl extends GuestbookLocalServiceBaseImpl {
 		return guestbook;
 	}
 
-
+	@Indexable(type = IndexableType.DELETE)
 	public Guestbook deleteGuestbook(long guestbookId,
 									 ServiceContext serviceContext) throws PortalException,
 			SystemException {

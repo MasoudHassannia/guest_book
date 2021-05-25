@@ -77,6 +77,7 @@ public interface GuestbookEntryLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public GuestbookEntry addGuestbookEntry(GuestbookEntry guestbookEntry);
 
+	@Indexable(type = IndexableType.REINDEX)
 	public GuestbookEntry addGuestbookEntry(
 			long userId, long guestbookId, String name, String email,
 			String message, ServiceContext serviceContext)
@@ -341,6 +342,7 @@ public interface GuestbookEntryLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public GuestbookEntry updateGuestbookEntry(GuestbookEntry guestbookEntry);
 
+	@Indexable(type = IndexableType.REINDEX)
 	public GuestbookEntry updateGuestbookEntry(
 			long userId, long guestbookId, long entryId, String name,
 			String email, String message, ServiceContext serviceContext)
