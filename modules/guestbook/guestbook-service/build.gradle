@@ -13,6 +13,7 @@ dependencies {
 
 	compileOnly group: "javax.portlet", name: "portlet-api"
 	compileOnly group: "javax.servlet", name: "javax.servlet-api"
+    compileOnly 'org.osgi:org.osgi.service.component.annotations'
 }
 
 buildService {

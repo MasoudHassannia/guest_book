@@ -14,7 +14,7 @@
             className="com.liferay.docs.guestbook.model.Guestbook" modelVar="guestbook">
 
         <liferay-ui:search-container-column-text property="name" />
-
+        <liferay-ui:search-container-column-status property="status" />
         <liferay-ui:search-container-column-jsp
                 align="right"
                 path="/guestbook_admin/guestbook_actions.jsp" />
