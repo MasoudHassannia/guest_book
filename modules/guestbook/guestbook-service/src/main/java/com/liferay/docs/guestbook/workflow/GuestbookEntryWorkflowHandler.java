@@ -1,12 +1,5 @@
 package com.liferay.docs.guestbook.workflow;
 
-import java.io.Serializable;
-import java.util.Locale;
-import java.util.Map;
-
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 import com.liferay.docs.guestbook.model.GuestbookEntry;
 import com.liferay.docs.guestbook.service.GuestbookEntryLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -17,57 +10,63 @@ import com.liferay.portal.kernel.workflow.BaseWorkflowHandler;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
 
+import java.io.Serializable;
+
+import java.util.Locale;
+import java.util.Map;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 @Component(immediate = true, service = WorkflowHandler.class)
-public class GuestbookEntryWorkflowHandler extends BaseWorkflowHandler<GuestbookEntry> {
+public class GuestbookEntryWorkflowHandler
+	extends BaseWorkflowHandler<GuestbookEntry> {
 
-    @Override
-    public String getClassName() {
+	@Override
+	public String getClassName() {
+		return GuestbookEntry.class.getName();
+	}
 
-        return GuestbookEntry.class.getName();
+	@Override
+	public String getType(Locale locale) {
+		return _resourceActions.getModelResource(locale, getClassName());
+	}
 
-    }
+	@Override
+	public GuestbookEntry updateStatus(
+			int status, Map<String, Serializable> workflowContext)
+		throws PortalException {
 
-    @Override
-    public String getType(Locale locale) {
+		long userId = GetterUtil.getLong(
+			(String)workflowContext.get(WorkflowConstants.CONTEXT_USER_ID));
+		long resourcePrimKey = GetterUtil.getLong(
+			(String)workflowContext.get(
+				WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
 
-        return _resourceActions.getModelResource(locale, getClassName());
+		ServiceContext serviceContext = (ServiceContext)workflowContext.get(
+			"serviceContext");
 
-    }
+		long guestbookId = _guestbookEntryLocalService.getGuestbookEntry(
+			resourcePrimKey
+		).getGuestbookId();
 
-    @Override
-    public GuestbookEntry updateStatus(
-            int status, Map<String, Serializable> workflowContext)
-            throws PortalException {
+		return _guestbookEntryLocalService.updateStatus(
+			userId, guestbookId, resourcePrimKey, status, serviceContext);
+	}
 
-        long userId = GetterUtil.getLong(
-                (String) workflowContext.get(WorkflowConstants.CONTEXT_USER_ID));
-        long resourcePrimKey = GetterUtil.getLong(
-                (String) workflowContext.get(
-                        WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
+	@Reference(unbind = "-")
+	protected void setGuestbookEntryLocalService(
+		GuestbookEntryLocalService guestbookEntryLocalService) {
 
-        ServiceContext serviceContext =
-                (ServiceContext) workflowContext.get("serviceContext");
+		_guestbookEntryLocalService = guestbookEntryLocalService;
+	}
 
-        long guestbookId =
-                _guestbookEntryLocalService.getGuestbookEntry(resourcePrimKey).getGuestbookId();
+	@Reference(unbind = "-")
+	protected void setResourceActions(ResourceActions resourceActions) {
+		_resourceActions = resourceActions;
+	}
 
-        return _guestbookEntryLocalService.updateStatus(
-                userId, guestbookId, resourcePrimKey, status, serviceContext);
-    }
+	private GuestbookEntryLocalService _guestbookEntryLocalService;
+	private ResourceActions _resourceActions;
 
-    @Reference(unbind = "-")
-    protected void setGuestbookEntryLocalService(GuestbookEntryLocalService guestbookEntryLocalService) {
-
-        _guestbookEntryLocalService = guestbookEntryLocalService;
-    }
-
-    @Reference(unbind = "-")
-    protected void setResourceActions(ResourceActions resourceActions) {
-
-        _resourceActions = resourceActions;
-    }
-
-    private GuestbookEntryLocalService _guestbookEntryLocalService;
-    private ResourceActions _resourceActions;
 }

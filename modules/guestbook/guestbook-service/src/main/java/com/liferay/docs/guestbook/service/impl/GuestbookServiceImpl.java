@@ -41,9 +41,10 @@ import org.osgi.service.component.annotations.Component;
 )
 public class GuestbookServiceImpl extends GuestbookServiceBaseImpl {
 
-	/*
+	/**
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never reference this class directly. Always use <code>com.liferay.docs.guestbook.service.GuestbookServiceUtil</code> to access the guestbook remote service.
 	 */
+
 }

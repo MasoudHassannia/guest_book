@@ -6,6 +6,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.helper.KeywordQueryContributorHelper;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -14,22 +15,24 @@ import org.osgi.service.component.annotations.Reference;
         property = "indexer.class.name=com.liferay.docs.guestbook.model.Guestbook",
         service = KeywordQueryContributor.class
 )
+//This class adds Guestbook fields to the search query constructed by
+// the Search application in Liferay DXP
 public class GuestbookKeywordQueryContributor
         implements KeywordQueryContributor {
 
-    @Override
-    public void contribute(
-            String keywords, BooleanQuery booleanQuery,
-            KeywordQueryContributorHelper keywordQueryContributorHelper) {
+	@Override
+	public void contribute(
+		String keywords, BooleanQuery booleanQuery,
+		KeywordQueryContributorHelper keywordQueryContributorHelper) {
 
-        SearchContext searchContext =
-                keywordQueryContributorHelper.getSearchContext();
+		SearchContext searchContext =
+			keywordQueryContributorHelper.getSearchContext();
 
-        queryHelper.addSearchLocalizedTerm(
-                booleanQuery, searchContext, Field.TITLE, false);
-    }
+		queryHelper.addSearchLocalizedTerm(
+			booleanQuery, searchContext, Field.TITLE, false);
+	}
 
-    @Reference
-    protected QueryHelper queryHelper;
+	@Reference
+	protected QueryHelper queryHelper;
 
 }

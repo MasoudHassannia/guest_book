@@ -1,19 +1,9 @@
 package com.liferay.docs.guestbook.internal.security.permission.resource;
 
-
-import java.util.Dictionary;
-
-import com.liferay.docs.guestbook.model.GuestbookEntry;
-import com.liferay.docs.guestbook.service.GuestbookEntryLocalService;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-
 import com.liferay.docs.guestbook.constants.GuestbookConstants;
 import com.liferay.docs.guestbook.constants.GuestbookPortletKeys;
+import com.liferay.docs.guestbook.model.GuestbookEntry;
+import com.liferay.docs.guestbook.service.GuestbookEntryLocalService;
 import com.liferay.exportimport.kernel.staging.permission.StagingPermission;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionFactory;
@@ -24,52 +14,65 @@ import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.workflow.permission.WorkflowPermission;
 
+import java.util.Dictionary;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+
 @Component(immediate = true)
 public class GuestbookEntryModelResourcePermissionRegistrar {
 
-    @Activate
-    public void activate(BundleContext bundleContext) {
-        Dictionary<String, Object> properties = new HashMapDictionary<>();
+	@Activate
+	public void activate(BundleContext bundleContext) {
+		Dictionary<String, Object> properties = new HashMapDictionary<>();
 
-        properties.put("model.class.name", GuestbookEntry.class.getName());
+		properties.put("model.class.name", GuestbookEntry.class.getName());
 
-        _serviceRegistration = bundleContext.registerService(
-                ModelResourcePermission.class,
-                ModelResourcePermissionFactory.create(
-                        GuestbookEntry.class, GuestbookEntry::getEntryId,
-                        _guestbookEntryLocalService::getGuestbookEntry, _portletResourcePermission,
-                        (modelResourcePermission, consumer) -> {
-                            consumer.accept(
-                                    new StagedModelPermissionLogic<>(
-                                            _stagingPermission, GuestbookPortletKeys.GUESTBOOK,
-                                            GuestbookEntry::getEntryId));
-                            consumer.accept(
-                                    new WorkflowedModelPermissionLogic<>(
-                                            _workflowPermission, modelResourcePermission,
-                                            _groupLocalService, GuestbookEntry::getEntryId));
-                        }),
-                properties);
-    }
+		_serviceRegistration = bundleContext.registerService(
+			ModelResourcePermission.class,
+			ModelResourcePermissionFactory.create(
+				GuestbookEntry.class, GuestbookEntry::getEntryId,
+				_guestbookEntryLocalService::getGuestbookEntry,
+				_portletResourcePermission,
+				(modelResourcePermission, consumer) -> {
+					consumer.accept(
+						new StagedModelPermissionLogic<>(
+							_stagingPermission, GuestbookPortletKeys.GUESTBOOK,
+							GuestbookEntry::getEntryId));
+					consumer.accept(
+						new WorkflowedModelPermissionLogic<>(
+							_workflowPermission, modelResourcePermission,
+							_groupLocalService, GuestbookEntry::getEntryId));
+				}),
+			properties);
+	}
 
-    @Deactivate
-    public void deactivate() {
-        _serviceRegistration.unregister();
-    }
+	@Deactivate
+	public void deactivate() {
+		_serviceRegistration.unregister();
+	}
 
-    @Reference
-    private GuestbookEntryLocalService _guestbookEntryLocalService;
+	@Reference
+	private GroupLocalService _groupLocalService;
 
-    @Reference(target = "(resource.name=" + GuestbookConstants.RESOURCE_NAME + ")")
-    private PortletResourcePermission _portletResourcePermission;
+	@Reference
+	private GuestbookEntryLocalService _guestbookEntryLocalService;
 
-    private ServiceRegistration<ModelResourcePermission> _serviceRegistration;
+	@Reference(
+		target = "(resource.name=" + GuestbookConstants.RESOURCE_NAME + ")"
+	)
+	private PortletResourcePermission _portletResourcePermission;
 
-    @Reference
-    private StagingPermission _stagingPermission;
+	private ServiceRegistration<ModelResourcePermission> _serviceRegistration;
 
-    @Reference
-    private WorkflowPermission _workflowPermission;
+	@Reference
+	private StagingPermission _stagingPermission;
 
-    @Reference
-    private GroupLocalService _groupLocalService;
+	@Reference
+	private WorkflowPermission _workflowPermission;
+
 }

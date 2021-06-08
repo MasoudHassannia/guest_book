@@ -25,7 +25,7 @@ package com.liferay.docs.guestbook.model.impl;
  */
 public class GuestbookEntryImpl extends GuestbookEntryBaseImpl {
 
-	/*
+	/**
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never reference this class directly. All methods that expect a guestbook entry model instance should use the {@link com.liferay.docs.guestbook.model.GuestbookEntry} interface instead.

@@ -1,122 +1,118 @@
 <?xml version="1.0"?>
 <!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN"
-        "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
+		"http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
 
-<service-builder dependency-injector="ds" package-path="com.liferay.docs.guestbook" mvcc-enabled="true">
-    <!--	This defines the author, namespace, and the entity name -->
-    <author>liferay</author>
-    <namespace>GB</namespace>
-    <entity name="Guestbook" local-service="true" uuid="true" remote-service="true">
+<service-builder dependency-injector="ds" mvcc-enabled="true" package-path="com.liferay.docs.guestbook">
+	<!--	This defines the author, namespace, and the entity name -->
+	<author>liferay</author>
+	<namespace>GB</namespace>
+	<entity local-service="true" name="Guestbook" remote-service="true" uuid="true">
 
+		<!-- Guestbook fields -->
+		<!-- PK fields -->
+		<column name="guestbookId" primary="true" type="long" />
+		<column name="name" type="String" />
 
-        <!-- Guestbook fields -->
-        <!-- PK fields -->
-        <column name="guestbookId" primary="true" type="long"/>
-        <column name="name" type="String"/>
+		<!-- Group instance -->
+		<!-- The groupId defines the ID of the Site in Liferay DXP where the entity instance exists.
+					The companyId is the primary key of a portal instance.-->
+		<column name="groupId" type="long" />
+		<column name="companyId" type="long" />
 
-        <!-- Group instance -->
-        <!--        The groupId defines the ID of the Site in Liferay DXP where the entity instance exists.
-                    The companyId is the primary key of a portal instance.-->
-        <column name="groupId" type="long"/>
-        <column name="companyId" type="long"/>
+		<!-- Audit fields -->
+		<!-- These fields help you track owners of entity instances,
+					along with those instances' create and modify dates-->
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
 
-        <!-- Audit fields -->
-        <!--        These fields help you track owners of entity instances,
-                    along with those instances’ create and modify dates-->
-        <column name="userId" type="long"/>
-        <column name="userName" type="String"/>
-        <column name="createDate" type="Date"/>
-        <column name="modifiedDate" type="Date"/>
+		<!-- Status fields -->
 
-        <!-- Status fields -->
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
 
-        <column name="status" type="int"/>
-        <column name="statusByUserId" type="long"/>
-        <column name="statusByUserName" type="String"/>
-        <column name="statusDate" type="Date"/>
+		<!-- Finder methods -->
+		<!-- A finder generates a get method for retrieving Guestbook entities.
+					The fields used by the finder define the scope of the data retrieved. -->
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
 
+		<finder name="Status" return-type="Collection">
+			<finder-column name="status" />
+		</finder>
 
-        <!-- Finder methods -->
-        <!--        A finder generates a get method for retrieving Guestbook entities.
-                    The fields used by the finder define the scope of the data retrieved. -->
-        <finder name="GroupId" return-type="Collection">
-            <finder-column name="groupId"/>
-        </finder>
+		<finder name="G_S" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="status" />
+		</finder>
 
-        <finder name="Status" return-type="Collection">
-            <finder-column name="status" />
-        </finder>
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
+		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
+	</entity>
 
-        <finder name="G_S" return-type="Collection">
-            <finder-column name="groupId" />
-            <finder-column name="status" />
-        </finder>
+	<entity local-service="true" name="GuestbookEntry" remote-service="true" uuid="true">
+		<!-- Guestbook Entry fields -->
 
-        <reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
-        <reference package-path="com.liferay.portlet.asset" entity="AssetLink" />
-        <reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
-    </entity>
+		<column name="entryId" primary="true" type="long" />
+		<column name="name" type="String" />
+		<column name="email" type="String" />
+		<column name="message" type="String" />
+		<column name="guestbookId" type="long" />
 
-    <entity name="GuestbookEntry" local-service="true" remote-service="true" uuid="true">
-        <!-- Guestbook Entry fields -->
+		<!-- Group instance -->
 
-        <column name="entryId" primary="true" type="long"/>
-        <column name="name" type="String"/>
-        <column name="email" type="String"/>
-        <column name="message" type="String"/>
-        <column name="guestbookId" type="long"/>
+		<column name="groupId" type="long" />
+		<column name="companyId" type="long" />
 
-        <!-- Group instance -->
+		<!-- Audit fields -->
 
-        <column name="groupId" type="long"/>
-        <column name="companyId" type="long"/>
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
 
-        <!-- Audit fields -->
+		<!-- Status fields -->
+		<!-- status fields to track workflow-->
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
 
-        <column name="userId" type="long"/>
-        <column name="userName" type="String"/>
-        <column name="createDate" type="Date"/>
-        <column name="modifiedDate" type="Date"/>
+		<!-- order by -->
+		<order>
+			<order-column name="createDate" order-by="desc" />
+		</order>
 
-        <!-- Status fields -->
-        <!--        status fields to track workflow-->
-        <column name="status" type="int"/>
-        <column name="statusByUserId" type="long"/>
-        <column name="statusByUserName" type="String"/>
-        <column name="statusDate" type="Date"/>
+		<finder name="G_G" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="guestbookId" />
+		</finder>
 
-        <!-- order by -->
-        <order>
-            <order-column name="createDate" order-by="desc" />
-        </order>
+		<finder name="Status" return-type="Collection">
+			<finder-column name="status" />
+		</finder>
 
-        <finder name="G_G" return-type="Collection">
-            <finder-column name="groupId" />
-            <finder-column name="guestbookId" />
-        </finder>
+		<finder name="G_G_S" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="guestbookId" />
+			<finder-column name="status" />
+		</finder>
 
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
+		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
+	</entity>
 
-        <finder name="Status" return-type="Collection">
-            <finder-column name="status" />
-        </finder>
-
-        <finder name="G_G_S" return-type="Collection">
-            <finder-column name="groupId" />
-            <finder-column name="guestbookId" />
-            <finder-column name="status" />
-        </finder>
-
-        <reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
-        <reference package-path="com.liferay.portlet.asset" entity="AssetLink" />
-        <reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
-    </entity>
-
-    <exceptions>
-        <exception>GuestbookEntryEmail</exception>
-        <exception>GuestbookEntryMessage</exception>
-        <exception>GuestbookEntryName</exception>
-        <exception>GuestbookName</exception>
-    </exceptions>
-
+	<exceptions>
+		<exception>GuestbookEntryEmail</exception>
+		<exception>GuestbookEntryMessage</exception>
+		<exception>GuestbookEntryName</exception>
+		<exception>GuestbookName</exception>
+	</exceptions>
 
 </service-builder>

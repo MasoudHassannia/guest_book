@@ -1,19 +1,16 @@
 dependencies {
 	compile project(":modules:guestbook:guestbook-api")
 
-	compileOnly group: "com.liferay.portal", name: "release.portal.api"
-
+	compileOnly "com.liferay.portal:release.portal.api"
+	compileOnly "org.osgi:org.osgi.service.component.annotations"
 	compileOnly group: "com.liferay", name: "com.liferay.petra.function"
 	compileOnly group: "com.liferay", name: "com.liferay.petra.model.adapter"
 	compileOnly group: "com.liferay", name: "com.liferay.petra.reflect"
-
-	compileOnly group: "com.liferay", name: "com.liferay.portal.search.spi"
 	compileOnly group: "com.liferay", name: "com.liferay.portal.search.api"
-	compileOnly 'com.liferay.portal:release.portal.api'
-
+	compileOnly group: "com.liferay", name: "com.liferay.portal.search.spi"
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 	compileOnly group: "javax.portlet", name: "portlet-api"
 	compileOnly group: "javax.servlet", name: "javax.servlet-api"
-    compileOnly 'org.osgi:org.osgi.service.component.annotations'
 }
 
 buildService {

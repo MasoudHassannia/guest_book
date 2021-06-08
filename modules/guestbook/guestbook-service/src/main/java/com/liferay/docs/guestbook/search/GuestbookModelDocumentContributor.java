@@ -1,9 +1,5 @@
 package com.liferay.docs.guestbook.search;
 
-import java.util.Locale;
-
-import org.osgi.service.component.annotations.Component;
-
 import com.liferay.docs.guestbook.model.Guestbook;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -14,37 +10,42 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 
+import java.util.Locale;
 
+import org.osgi.service.component.annotations.Component;
 
 @Component(
         immediate = true,
         property = "indexer.class.name=com.liferay.docs.guestbook.model.Guestbook",
         service = ModelDocumentContributor.class
 )
+//controls which Guestbook fields are indexed in the search engine
 public class GuestbookModelDocumentContributor
         implements ModelDocumentContributor<Guestbook> {
 
-    @Override
-    public void contribute(Document document, Guestbook guestbook) {
-        try {
-            document.addDate(Field.MODIFIED_DATE, guestbook.getModifiedDate());
+	@Override
+	public void contribute(Document document, Guestbook guestbook) {
+		try {
+			document.addDate(Field.MODIFIED_DATE, guestbook.getModifiedDate());
 
-            Locale defaultLocale = PortalUtil.getSiteDefaultLocale(
-                    guestbook.getGroupId());
+			Locale defaultLocale = PortalUtil.getSiteDefaultLocale(
+				guestbook.getGroupId());
 
-            String localizedTitle = LocalizationUtil.getLocalizedName(
-                    Field.TITLE, defaultLocale.toString());
+			String localizedTitle = LocalizationUtil.getLocalizedName(
+				Field.TITLE, defaultLocale.toString());
 
-            document.addText(localizedTitle, guestbook.getName());
-        } catch (PortalException pe) {
-            if (_log.isWarnEnabled()) {
-                _log.warn(
-                        "Unable to index guestbook " + guestbook.getGuestbookId(), pe);
-            }
-        }
-    }
+			document.addText(localizedTitle, guestbook.getName());
+		}
+		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to index guestbook " + guestbook.getGuestbookId(),
+					pe);
+			}
+		}
+	}
 
-    private static final Log _log = LogFactoryUtil.getLog(
-            GuestbookModelDocumentContributor.class);
+	private static final Log _log = LogFactoryUtil.getLog(
+		GuestbookModelDocumentContributor.class);
 
 }
